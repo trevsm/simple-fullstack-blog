@@ -1,0 +1,41 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_PATH=./build/index.js",
+    "build": "tsc -p .",
+    "dev": "nodemon src/index.ts",
+    "asdf": "set -a; source ../.env; set +a",
+    "db:migration": "bash ./db_migration.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/crypto-js": "^4.1.1",
+    "@types/express": "^4.17.14",
+    "@types/graphql": "^14.5.0",
+    "@types/node": "^18.8.3",
+    "@types/sequelize": "^4.28.14",
+    "@typescript-eslint/eslint-plugin": "^5.39.0",
+    "@typescript-eslint/parser": "^5.39.0",
+    "cross-var": "^1.1.0",
+    "dotenv-cli": "^6.0.0",
+    "eslint": "^8.25.0",
+    "nodemon": "^2.0.20",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "apollo-server-express": "^3.10.3",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.1",
+    "graphql": "^16.6.0",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.24.0",
+    "sequelize-auto": "^0.8.8"
+  }
+}

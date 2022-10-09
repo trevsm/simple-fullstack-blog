@@ -1,0 +1,47 @@
+version: "2.2"
+services:
+
+  # MySQL Server
+  mysql_database:
+    container_name: mysql_database
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  node_server:
+    container_name: node_server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: base
+    depends_on:
+      - mysql_database
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - type: bind
+        source: ./server/src
+        target: /home/node/app/src
+      - ./server/nodemon.json:/home/node/app/nodemon.json
+    expose:
+      - '4000'
+    ports:
+      - '4000:4000'
+    command: yarn dev
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
