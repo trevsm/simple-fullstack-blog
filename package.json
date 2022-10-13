@@ -1,0 +1,21 @@
+{
+  "name": "full-stack-example",
+  "version": "1.0.0",
+  "description": "Using: - Typescript - React - Graphql - Mysql - Sequelize - Apollo - & Docker Compose",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "./scripts/start-local.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trevsm/simple-fullstack-blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/trevsm/simple-fullstack-blog/issues"
+  },
+  "homepage": "https://github.com/trevsm/simple-fullstack-blog#readme"
+}
