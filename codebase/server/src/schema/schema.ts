@@ -1,6 +1,6 @@
-import { gql } from 'apollo-server-express'
-import db from '../database'
-import Crypt from 'crypto-js'
+import { gql } from "apollo-server-express"
+import db from "../database"
+import Crypt from "crypto-js"
 
 export const typeDefs = gql`
   type user {
@@ -46,9 +46,9 @@ export const resolvers = {
       if (!user) return null
 
       return {
-        user_id: user.getDataValue('user_id'),
-        email: user.getDataValue('email'),
-        password: user.getDataValue('password'),
+        user_id: user.getDataValue("user_id"),
+        email: user.getDataValue("email"),
+        password: user.getDataValue("password"),
       }
     },
     allUsers: async () => {
@@ -56,8 +56,8 @@ export const resolvers = {
       if (!users) return null
 
       return users.map((user) => ({
-        user_id: user.getDataValue('user_id'),
-        email: user.getDataValue('email'),
+        user_id: user.getDataValue("user_id"),
+        email: user.getDataValue("email"),
       }))
     },
   },
@@ -67,8 +67,8 @@ export const resolvers = {
       const hash = Crypt.SHA512(password + process.env.SECRET).toString()
       const data = await db.user.create({ email, password: hash })
       return {
-        email: data.getDataValue('email'),
-        password: data.getDataValue('password'),
+        email: data.getDataValue("email"),
+        password: data.getDataValue("password"),
       }
     },
     // @TODO: Update only the fields that are passed instead of all of them
@@ -76,14 +76,14 @@ export const resolvers = {
       const hash = Crypt.SHA512(password + process.env.SECRET).toString()
       await db.user.update(
         { email, password: hash },
-        { where: { user_id: id } },
+        { where: { user_id: id } }
       )
       const newUser = await db.user.findOne({ where: { user_id: id } })
       return newUser
     },
     deleteUser: async (_: any, { id }: any) => {
       await db.user.destroy({ where: { user_id: id } })
-      return 'User deleted'
+      return "User deleted"
     },
 
     // Post Mutations
@@ -91,9 +91,9 @@ export const resolvers = {
       const data = await db.post.create({ user_id, title, content })
       return {
         id: data.id,
-        user_id: data.getDataValue('user_id'),
-        title: data.getDataValue('title'),
-        content: data.getDataValue('content'),
+        user_id: data.getDataValue("user_id"),
+        title: data.getDataValue("title"),
+        content: data.getDataValue("content"),
       }
     },
     // @TODO: Update only the fields that are passed instead of all of them
@@ -104,7 +104,7 @@ export const resolvers = {
     },
     deletePost: async (_: any, { id }: any) => {
       await db.post.destroy({ where: { id } })
-      return 'Post deleted'
+      return "Post deleted"
     },
   },
 }

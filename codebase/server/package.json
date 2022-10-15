@@ -7,7 +7,7 @@
     "start": "NODE_PATH=./build/index.js",
     "build": "tsc -p .",
     "dev": "nodemon src/index.ts",
-    "db:migration": "bash ./db_migration.sh"
+    "db:migration": "bash ./scripts/db_migration.sh"
   },
   "keywords": [],
   "author": "",

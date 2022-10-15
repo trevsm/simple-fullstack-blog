@@ -5,7 +5,8 @@
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "start": "./scripts/start-local.sh"
+    "start": "./scripts/start-local.sh",
+    "install": "./scripts/install.sh"
   },
   "repository": {
     "type": "git",

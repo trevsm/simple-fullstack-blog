@@ -1,7 +1,7 @@
-import { Sequelize } from 'sequelize'
-import * as dotenv from 'dotenv'
+import { Sequelize } from "sequelize"
+import * as dotenv from "dotenv"
 
-import { initModels, user, post } from '../models/init-models'
+import { initModels, user, post } from "../generated/init-models"
 
 dotenv.config()
 
@@ -12,7 +12,7 @@ if (
   !process.env.MYSQL_HOST ||
   !process.env.MYSQL_PORT
 )
-  throw new Error('Missing environment variables')
+  throw new Error("Missing environment variables")
 
 const sequelize = new Sequelize(
   process.env.MYSQL_DATABASE,
@@ -21,7 +21,7 @@ const sequelize = new Sequelize(
   {
     host: process.env.MYSQL_HOST,
     port: parseInt(process.env.MYSQL_PORT as string),
-    dialect: 'mysql',
+    dialect: "mysql",
     define: {
       freezeTableName: true,
     },
@@ -31,7 +31,7 @@ const sequelize = new Sequelize(
       acquire: 30000,
       idle: 10000,
     },
-  },
+  }
 )
 
 initModels(sequelize)

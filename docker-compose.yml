@@ -12,7 +12,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
-      - '3306:3306'
+      - '${MYSQL_PORT}:3306' # external:internal
     volumes:
       - ./codebase/database:/docker-entrypoint-initdb.d
     extra_hosts:
@@ -33,15 +33,16 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      NODE_PORT: ${NODE_PORT}
     volumes:
       - type: bind
         source: ./codebase/server/src
         target: /home/node/app/src
       - ./codebase/server/nodemon.json:/home/node/app/nodemon.json
     expose:
-      - '4000'
+      - '${NODE_PORT}'
     ports:
-      - '4000:4000'
+      - '${NODE_PORT}:${NODE_PORT}'
     command: yarn dev
     extra_hosts:
       - "host.docker.internal:host-gateway"

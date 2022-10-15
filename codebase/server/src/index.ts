@@ -1,9 +1,12 @@
-import { ApolloServer } from 'apollo-server-express'
-import { resolvers, typeDefs } from './schema/schema'
+import { ApolloServer } from "apollo-server-express"
+import { resolvers, typeDefs } from "./schema/schema"
+import * as dotenv from "dotenv"
 
-import express from 'express'
+dotenv.config()
 
-const PORT = 4000
+import express from "express"
+
+const PORT = process.env.NODE_PORT || 3030
 const app = express()
 
 const graphql = async () => {
@@ -15,10 +18,14 @@ const graphql = async () => {
 }
 graphql()
 
-app.get('/', async (req, res) => {
-  res.send('Hello World')
+app.get("/", async (req, res) => {
+  res.send("Hello World")
 })
 
 app.listen(PORT, () => {
-  console.log(`Running on ${PORT}`)
+  if (process.env.NODE_PORT) {
+    console.log(`Server running ENV port: ${PORT}`)
+  } else {
+    console.log(`Running on DEFAULT port: ${PORT}`)
+  }
 })

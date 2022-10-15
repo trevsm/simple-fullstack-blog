@@ -1,4 +1,4 @@
-Use test_db;
+Use test_db; -- Change this to your MYSQL_DATABASE name
 
 Create Table user (
     user_id     int(11)          not null auto_increment,
