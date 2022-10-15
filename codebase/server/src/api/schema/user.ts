@@ -1,55 +1,126 @@
 import db from "../database"
 import { GraphQLError } from "graphql"
+import { Errors } from "../errors"
 import Crypt from "crypto-js"
+import jsonwebtoken from "jsonwebtoken"
 
-export const user = async (_: any, { email }: any) => {
+import * as dotenv from "dotenv"
+dotenv.config()
+
+export const me = async (_: any, __: any, { user }: any) => {
+  if (!user) throw new GraphQLError("You are not authenticated")
+  return await db.user.findByPk(user.id)
+}
+
+export const user = async (_: any, { user_id }: any, { user }: any) => {
   try {
-    const user = await db.user.findOne({ where: { email: email } })
-    if (!user) {
+    if (!user) Errors.AuthentificationError()
+
+    const foundUser = await db.user.findOne({ where: { user_id } })
+    if (!foundUser) {
       throw new Error("User not found")
     }
 
     return {
-      user_id: user.getDataValue("user_id"),
-      email: user.getDataValue("email"),
-      password: user.getDataValue("password"),
+      user_id: foundUser.getDataValue("user_id"),
+      email: foundUser.getDataValue("email"),
+      password: foundUser.getDataValue("password"),
     }
   } catch (e) {
     throw new GraphQLError("No user found")
   }
 }
 
-export const allUsers = async () => {
-  const users = await db.user.findAll()
-  if (!users) return null
+export const allUsers = async (root: any, args: any, { user }: any) => {
+  try {
+    if (!user) return Errors.AuthentificationError()
 
-  return users.map((user) => ({
-    email: user.getDataValue("email"),
-  }))
+    const users = await db.user.findAll()
+    if (!users) return null
+
+    return users.map((user) => ({
+      email: user.getDataValue("email"),
+    }))
+  } catch (e) {
+    throw new GraphQLError(e as string)
+  }
 }
 
-export const createUser = async (_: any, { email, password }: any) => {
+export const login = async (_: any, { email, password }: any) => {
   try {
-    const checkUser = await db.user.findOne({ where: { email } })
-    if (checkUser) throw new Error("User already exists")
+    const user = await db.user.findOne({ where: { email } })
+    if (!user) return Errors.InvalidCredentials()
 
-    const hash = Crypt.SHA512(password + process.env.SECRET).toString()
-    const data = await db.user.create({ email, password: hash })
+    const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
+    console.log(process.env.PASS_SECRET)
+
+    if (hash !== user.getDataValue("password"))
+      return Errors.InvalidCredentials()
+
+    const token = jsonwebtoken.sign(
+      {
+        id: user.getDataValue("user_id"),
+        email: user.getDataValue("email"),
+      },
+      process.env.JWT_SECRET as string,
+      {
+        expiresIn: "2d",
+      }
+    )
+
     return {
-      email: data.getDataValue("email"),
+      token,
+      user: {
+        user_id: user.getDataValue("user_id"),
+        email: user.getDataValue("email"),
+      },
     }
   } catch (e) {
     throw new GraphQLError(e as string)
   }
 }
 
-export const updateUser = async (_: any, { id, email, password }: any) => {
+// Register a new user and issue a JWT
+export const registerUser = async (_: any, { email, password }: any) => {
   try {
-    const user = await db.user.findOne({ where: { user_id: id } })
-    if (!user) throw new Error("User not found")
+    // Check if user already exists using email
+    const checkUser = await db.user.findOne({ where: { email } })
+    if (checkUser) throw new Error("User already exists")
+
+    const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
+    const user = await db.user.create({ email, password: hash })
+
+    const token = jsonwebtoken.sign(
+      { id: user.getDataValue("user_id"), email: user.getDataValue("email") },
+      process.env.JWT_SECRET as string,
+      { expiresIn: "2d" }
+    )
+
+    return {
+      user: {
+        user_id: user.getDataValue("user_id"),
+        email: user.getDataValue("email"),
+      },
+      token,
+    }
+  } catch (e) {
+    throw new GraphQLError(e as string)
+  }
+}
+
+export const updateUser = async (
+  _: any,
+  { id, email, password }: any,
+  { user }: any
+) => {
+  try {
+    if (!user) return Errors.AuthentificationError()
+
+    const foundUser = await db.user.findOne({ where: { user_id: id } })
+    if (!foundUser) throw new Error("User not found")
 
     if (password) {
-      const hash = Crypt.SHA512(password + process.env.SECRET).toString()
+      const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
       await db.user.update({ password: hash }, { where: { user_id: id } })
     }
 
@@ -66,10 +137,15 @@ export const updateUser = async (_: any, { id, email, password }: any) => {
   }
 }
 
-export const deleteUser = async (_: any, { id }: any) => {
+export const deleteUser = async (_: any, { id }: any, { user }: any) => {
   try {
-    const user = await db.user.findOne({ where: { user_id: id } })
-    if (!user) throw new Error("User not found")
+    if (!user) return Errors.AuthentificationError()
+
+    const foundUser = await db.user.findOne({ where: { user_id: id } })
+    if (!foundUser) throw new Error("User not found")
+
+    if (foundUser.getDataValue("user_id") !== user.id)
+      return Errors.SufficientPermissions()
 
     await db.user.destroy({ where: { user_id: id } })
     return "User deleted!"

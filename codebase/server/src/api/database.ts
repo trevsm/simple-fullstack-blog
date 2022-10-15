@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize"
+
 import * as dotenv from "dotenv"
+dotenv.config()
 
 import { initModels, user, post } from "./generated/init-models"
-
-dotenv.config()
 
 if (
   !process.env.MYSQL_DATABASE ||

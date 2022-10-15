@@ -1,5 +1,5 @@
 import { ApolloServer } from "apollo-server-express"
-import { resolvers, typeDefs } from "./api/schema/schema"
+import { resolvers, typeDefs } from "./api/schema"
 import * as dotenv from "dotenv"
 
 dotenv.config()
