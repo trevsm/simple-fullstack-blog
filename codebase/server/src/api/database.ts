@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize"
 import * as dotenv from "dotenv"
 
-import { initModels, user, post } from "../generated/init-models"
+import { initModels, user, post } from "./generated/init-models"
 
 dotenv.config()
 
@@ -20,7 +20,7 @@ const sequelize = new Sequelize(
   process.env.MYSQL_PASSWORD,
   {
     host: process.env.MYSQL_HOST,
-    port: parseInt(process.env.MYSQL_PORT as string),
+    port: parseInt(process.env.MYSQL_PORT),
     dialect: "mysql",
     define: {
       freezeTableName: true,

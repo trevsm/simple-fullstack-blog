@@ -14,7 +14,8 @@ services:
     ports:
       - '${MYSQL_PORT}:3306' # external:internal
     volumes:
-      - ./codebase/database:/docker-entrypoint-initdb.d
+      - ./codebase/database/sql:/docker-entrypoint-initdb.d
+      - ./codebase/database/data:/var/lib/mysql
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
