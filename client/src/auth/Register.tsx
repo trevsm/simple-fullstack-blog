@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useRegisterUserMutation } from "../generated/graphql"
+import useAuthUser from "./hooks/useAuthUser"
 
 export const Register = () => {
   const [registerUser] = useRegisterUserMutation()
@@ -8,19 +9,24 @@ export const Register = () => {
   const [password, setPassword] = useState("")
   const [password2, setPassword2] = useState("")
 
+  const { setAuthUser } = useAuthUser()
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (password !== password2) {
       alert("Passwords do not match")
       return
     }
-    const response = await registerUser({
+
+    const { data, errors } = await registerUser({
       variables: {
         email,
         password,
       },
     })
-    console.log(response)
+    console.log(errors)
+
+    if (data) setAuthUser(data.registerUser.token)
   }
 
   return (

@@ -24,7 +24,7 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@apollo/client@^3.7.0":
+"@apollo/client@^3.7.0", "@apollo/client@latest":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.7.0.tgz#1c26a04488f45b3a4779fa2562e4b706402cb876"
   integrity sha512-hp4OvrH1ZIQACRYcIrh/C0WFnY7IM7G6nlTpC8DSTEWxfZQ2kvpvDY0I/hYmCs0oAVrg26g3ANEdOzGWTcYbPg==
@@ -61,6 +61,13 @@
     "@types/long" "^4.0.0"
     "@types/node" "^10.1.0"
     long "^4.0.0"
+
+"@apollo/react-hooks@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@apollo/react-hooks/-/react-hooks-4.0.0.tgz#7bf7b320c90d276f637d9a84b503e17b840dd4e6"
+  integrity sha512-fCu0cbne3gbUl0QbA8X4L33iuuFVQbC5Jo2MIKRK8CyawR6PoxDpFdFA1kc6033ODZuZZ9Eo4RdeJFlFIIYcLA==
+  dependencies:
+    "@apollo/client" latest
 
 "@apollo/rover@^0.9.1":
   version "0.9.1"

@@ -1,10 +1,15 @@
-import Auth from "./auth/Auth"
+import useAuthUser from "./auth/hooks/useAuthUser"
+import { useMyInfoQuery } from "./generated/graphql"
 
 function App() {
+  const { logout } = useAuthUser()
+  const { data } = useMyInfoQuery()
+
   return (
-    <Auth>
-      <div className="App">Hello World!</div>
-    </Auth>
+    <div>
+      <button onClick={logout}>Logout</button>
+      <div className="App">Welcome {data?.me?.email}</div>
+    </div>
   )
 }
 

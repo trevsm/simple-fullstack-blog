@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { useLoginUserMutation } from "../generated/graphql"
+import useAuthUser from "./hooks/useAuthUser"
 
 export const Login = () => {
   const [login] = useLoginUserMutation()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const { setAuthUser } = useAuthUser()
 
   const handleLogin = async () => {
     const { data } = await login({
@@ -13,10 +15,7 @@ export const Login = () => {
         password,
       },
     })
-    if (data) {
-      localStorage.setItem("token", data.login.token)
-      window.location.reload()
-    }
+    if (data) setAuthUser(data.login.token)
   }
   return (
     <div>
