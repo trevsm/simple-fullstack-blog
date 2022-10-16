@@ -125,6 +125,11 @@ export type GetUserQueryVariables = Exact<{
 
 export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, email: string } | null };
 
+export type MyInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyInfoQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, email: string } | null };
+
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -183,6 +188,41 @@ export function useGetUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetUserQueryHookResult = ReturnType<typeof useGetUserQuery>;
 export type GetUserLazyQueryHookResult = ReturnType<typeof useGetUserLazyQuery>;
 export type GetUserQueryResult = Apollo.QueryResult<GetUserQuery, GetUserQueryVariables>;
+export const MyInfoDocument = gql`
+    query myInfo {
+  me {
+    id
+    email
+  }
+}
+    `;
+
+/**
+ * __useMyInfoQuery__
+ *
+ * To run a query within a React component, call `useMyInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMyInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMyInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMyInfoQuery(baseOptions?: Apollo.QueryHookOptions<MyInfoQuery, MyInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MyInfoQuery, MyInfoQueryVariables>(MyInfoDocument, options);
+      }
+export function useMyInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyInfoQuery, MyInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MyInfoQuery, MyInfoQueryVariables>(MyInfoDocument, options);
+        }
+export type MyInfoQueryHookResult = ReturnType<typeof useMyInfoQuery>;
+export type MyInfoLazyQueryHookResult = ReturnType<typeof useMyInfoLazyQuery>;
+export type MyInfoQueryResult = Apollo.QueryResult<MyInfoQuery, MyInfoQueryVariables>;
 export const GetAllUsersDocument = gql`
     query getAllUsers {
   allUsers {

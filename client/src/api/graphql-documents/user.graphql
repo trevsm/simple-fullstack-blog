@@ -5,6 +5,13 @@ query getUser($id: Int!) {
   }
 }
 
+query myInfo {
+  me {
+    id
+    email
+  }
+}
+
 query getAllUsers {
   allUsers {
     id

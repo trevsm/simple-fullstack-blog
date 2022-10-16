@@ -1,5 +1,11 @@
+import Auth from "./auth/Auth"
+
 function App() {
-  return <div className="App">Hello World!</div>
+  return (
+    <Auth>
+      <div className="App">Hello World!</div>
+    </Auth>
+  )
 }
 
 export default App
