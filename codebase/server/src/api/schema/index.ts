@@ -8,7 +8,13 @@ import {
   updateUser,
   deleteUser,
 } from "./user"
-import { createPost, updatePost, deletePost } from "./post"
+import {
+  createPost,
+  updatePost,
+  deletePost,
+  allPosts,
+  allUserPosts,
+} from "./post"
 
 export const typeDefs = gql`
   type User {
@@ -39,8 +45,8 @@ export const typeDefs = gql`
     allUsers: [User!]!
 
     # Post queries
-    post(id: ID!): Post
-    allUserPosts(id: ID!): [Post]
+    post(id: Int!): Post
+    allUserPosts(id: Int!): [Post]
     allPosts: [Post]
   }
 
@@ -53,7 +59,7 @@ export const typeDefs = gql`
     deleteUser(id: Int!): String
 
     # Post Mutations
-    createPost(user_id: Int!, title: String!, content: String!): Post
+    createPost(title: String!, content: String!): Post
     updatePost(id: Int!, title: String!, content: String!): Post
     deletePost(id: Int!): String
   }
@@ -63,10 +69,14 @@ export const resolvers = {
     me,
     user,
     allUsers,
+
+    allPosts,
+    allUserPosts,
   },
   Mutation: {
     login,
     registerUser,
+
     updateUser,
     deleteUser,
 

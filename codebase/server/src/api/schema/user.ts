@@ -25,7 +25,8 @@ export const me = async (_: any, __: any, { user }: any) => {
 
 export const user = async (_: any, { id }: any, { user }: any) => {
   try {
-    if (!user) Errors.AuthentificationError()
+    // No need for authentification here
+    // if (!user) Errors.AuthentificationError()
 
     const foundUser = await db.user.findOne({ where: { id } })
     if (!foundUser) return Errors.UserNotFound()
@@ -40,9 +41,10 @@ export const user = async (_: any, { id }: any, { user }: any) => {
   }
 }
 
-export const allUsers = async (root: any, args: any, { user }: any) => {
+export const allUsers = async (_: any, __: any, { user }: any) => {
   try {
-    if (!user) return Errors.AuthentificationError()
+    // No need for authentification here
+    // if (!user) return Errors.AuthentificationError()
 
     const users = await db.user.findAll()
     if (!users) return null
