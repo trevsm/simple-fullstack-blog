@@ -14,15 +14,15 @@ services:
     ports:
       - '${MYSQL_PORT}:3306' # external:internal
     volumes:
-      - ./codebase/database/sql:/docker-entrypoint-initdb.d
-      - ./codebase/database/data:/var/lib/mysql
+      - ./database/sql:/docker-entrypoint-initdb.d
+      - ./database/data:/var/lib/mysql
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   node_server:
     container_name: node_server
     build:
-      context: ./codebase/server
+      context: ./server
       dockerfile: Dockerfile
       target: base
     depends_on:
@@ -39,9 +39,9 @@ services:
       NODE_PORT: ${NODE_PORT}
     volumes:
       - type: bind
-        source: ./codebase/server/src
+        source: ./server/src
         target: /home/node/app/src
-      - ./codebase/server/nodemon.json:/home/node/app/nodemon.json
+      - ./server/nodemon.json:/home/node/app/nodemon.json
     expose:
       - '${NODE_PORT}'
     ports:

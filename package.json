@@ -1,23 +1,24 @@
 {
   "name": "full-stack-example",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "version": "1.0.0",
   "description": "Using: - Typescript - React - Graphql - Mysql - Sequelize - Apollo - & Docker Compose",
   "main": "index.js",
   "devDependencies": {},
   "scripts": {
-    "start": "./scripts/start-local.sh",
-    "client:dev": "cd codebase/client && yarn start",
-    "install": "./scripts/install.sh"
+    "start": "echo \"Please specify :client or :server\"",
+    "start:server": "./scripts/start-server.sh",
+    "start:client": "cd client && yarn start"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/trevsm/simple-fullstack-blog.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/trevsm/simple-fullstack-blog/issues"
-  },
-  "homepage": "https://github.com/trevsm/simple-fullstack-blog#readme"
+  "author": "Trevor Smith",
+  "license": "ISC"
 }

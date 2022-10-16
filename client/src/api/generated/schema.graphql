@@ -1,0 +1,43 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+type User {
+  id: Int!
+  email: String!
+}
+type Post {
+  id: Int!
+  user_id: Int!
+  title: String!
+  content: String!
+}
+type Error {
+  error: String!
+}
+type AuthPayload {
+  token: String!
+  user: User!
+}
+type Query {
+  me: User
+  user(id: Int!): User
+  allUsers: [User!]!
+  post(id: Int!): Post
+  allUserPosts(id: Int!): [Post]
+  allPosts: [Post]
+}
+type Mutation {
+  login(email: String!, password: String!): AuthPayload!
+  registerUser(email: String!, password: String!): AuthPayload!
+  updateUser(id: Int!, email: String, password: String): User
+  deleteUser(id: Int!): String
+  createPost(title: String!, content: String!): Post
+  updatePost(id: Int!, title: String!, content: String!): Post
+  deletePost(id: Int!): String
+}
+"Exposes a URL that specifies the behavior of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behavior of this scalar."
+    url: String!
+  ) on SCALAR
