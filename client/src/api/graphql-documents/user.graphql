@@ -21,3 +21,13 @@ mutation loginUser($email: String!, $password: String!) {
     }
   }
 }
+
+mutation registerUser($email: String!, $password: String!) {
+  registerUser(email: $email, password: $password) {
+    token
+    user {
+      id
+      email
+    }
+  }
+}
