@@ -1,0 +1,23 @@
+query getUser($id: Int!) {
+  user(id: $id) {
+    id
+    email
+  }
+}
+
+query getAllUsers {
+  allUsers {
+    id
+    email
+  }
+}
+
+mutation loginUser($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    token
+    user {
+      id
+      email
+    }
+  }
+}
