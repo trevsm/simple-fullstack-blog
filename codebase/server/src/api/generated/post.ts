@@ -39,7 +39,7 @@ export class post extends Model<postAttributes, postCreationAttributes> implemen
       allowNull: false,
       references: {
         model: 'user',
-        key: 'user_id'
+        key: 'id'
       }
     },
     title: {

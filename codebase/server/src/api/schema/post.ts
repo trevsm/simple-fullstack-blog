@@ -1,7 +1,7 @@
 import db from "../database"
 
-export const createPost = async (_: any, { user_id, title, content }: any) => {
-  const data = await db.post.create({ user_id, title, content })
+export const createPost = async (_: any, { id, title, content }: any) => {
+  const data = await db.post.create({ user_id: id, title, content })
   return {
     id: data.id,
     user_id: data.getDataValue("user_id"),
@@ -10,11 +10,8 @@ export const createPost = async (_: any, { user_id, title, content }: any) => {
   }
 }
 
-export const updatePost = async (
-  _: any,
-  { id, user_id, title, content }: any
-) => {
-  await db.post.update({ user_id, title, content }, { where: { id } })
+export const updatePost = async (_: any, { id, title, content }: any) => {
+  await db.post.update({ id, title, content }, { where: { id } })
   const newPost = await db.post.findOne({ where: { id } })
   return newPost
 }

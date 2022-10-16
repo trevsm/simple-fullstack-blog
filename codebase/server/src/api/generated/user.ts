@@ -3,18 +3,18 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { post, postId } from './post';
 
 export interface userAttributes {
-  user_id: number;
+  id: number;
   email: string;
   password: string;
 }
 
-export type userPk = "user_id";
+export type userPk = "id";
 export type userId = user[userPk];
-export type userOptionalAttributes = "user_id";
+export type userOptionalAttributes = "id";
 export type userCreationAttributes = Optional<userAttributes, userOptionalAttributes>;
 
 export class user extends Model<userAttributes, userCreationAttributes> implements userAttributes {
-  user_id!: number;
+  id!: number;
   email!: string;
   password!: string;
 
@@ -33,7 +33,7 @@ export class user extends Model<userAttributes, userCreationAttributes> implemen
 
   static initModel(sequelize: Sequelize.Sequelize): typeof user {
     return user.init({
-    user_id: {
+    id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -58,7 +58,7 @@ export class user extends Model<userAttributes, userCreationAttributes> implemen
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "user_id" },
+          { name: "id" },
         ]
       },
       {

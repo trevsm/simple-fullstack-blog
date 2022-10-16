@@ -1,16 +1,21 @@
 import { ApolloServer } from "apollo-server-express"
 import { resolvers, typeDefs } from "./api/schema"
-import * as dotenv from "dotenv"
 
+import * as dotenv from "dotenv"
 dotenv.config()
 
 import express from "express"
+import Auth from "./api/Auth"
 
 const PORT = process.env.NODE_PORT || 3030
 const app = express()
 
 const graphql = async () => {
-  const server = new ApolloServer({ resolvers, typeDefs })
+  const server = new ApolloServer({
+    resolvers,
+    typeDefs,
+    context: Auth,
+  })
 
   await server.start()
 

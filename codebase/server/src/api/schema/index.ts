@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-express"
 import {
+  me,
   user,
   allUsers,
   registerUser,
@@ -11,7 +12,7 @@ import { createPost, updatePost, deletePost } from "./post"
 
 export const typeDefs = gql`
   type User {
-    user_id: Int!
+    id: Int!
     email: String!
   }
 
@@ -39,7 +40,7 @@ export const typeDefs = gql`
 
     # Post queries
     post(id: ID!): Post
-    allUserPosts(user_id: ID!): [Post]
+    allUserPosts(id: ID!): [Post]
     allPosts: [Post]
   }
 
@@ -48,17 +49,18 @@ export const typeDefs = gql`
     login(email: String!, password: String!): AuthPayload!
     registerUser(email: String!, password: String!): AuthPayload!
 
-    updateUser(id: ID!, email: String, password: String): User
-    deleteUser(id: ID!): String
+    updateUser(id: Int!, email: String, password: String): User
+    deleteUser(id: Int!): String
 
     # Post Mutations
-    createPost(user_id: ID!, title: String!, content: String!): Post
-    updatePost(id: ID!, user_id: ID!, title: String!, content: String!): Post
-    deletePost(id: ID!): String
+    createPost(user_id: Int!, title: String!, content: String!): Post
+    updatePost(id: Int!, title: String!, content: String!): Post
+    deletePost(id: Int!): String
   }
 `
 export const resolvers = {
   Query: {
+    me,
     user,
     allUsers,
   },
