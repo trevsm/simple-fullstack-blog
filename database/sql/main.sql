@@ -1,7 +1,7 @@
 Use test_db; -- Change this to your MYSQL_DATABASE name
 
 Create Table user (
-    id     int(11)          not null auto_increment,
+    id          int(11)          not null auto_increment,
     email       varchar(255)     not null,
     password    varchar(255)     not null,
 
