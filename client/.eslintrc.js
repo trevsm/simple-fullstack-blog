@@ -19,5 +19,4 @@ module.exports = {
   rules: {
     "react/react-in-jsx-scope": "off",
   },
-  exclude: ["node_modules", "tsconfig.json"],
 }
