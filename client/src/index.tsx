@@ -9,7 +9,6 @@ import {
   createHttpLink,
 } from "@apollo/client"
 import { setContext } from "@apollo/client/link/context"
-import Auth from "./auth/Auth"
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",
@@ -35,9 +34,7 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <React.StrictMode>
     <ApolloProvider {...{ client }}>
-      <Auth>
-        <App />
-      </Auth>
+      <App />
     </ApolloProvider>
   </React.StrictMode>
 )
