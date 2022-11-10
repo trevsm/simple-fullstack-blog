@@ -46,7 +46,6 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@apollo/rover": "^0.9.1",
     "@graphql-codegen/cli": "^2.13.7",
     "@graphql-codegen/client-preset": "^1.0.7",
     "@graphql-codegen/introspection": "^2.2.1",
