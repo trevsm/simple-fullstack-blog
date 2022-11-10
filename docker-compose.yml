@@ -4,7 +4,7 @@ services:
   # MySQL Server
   mysql_database:
     container_name: mysql_database
-    image: arm64v8/mariadb:latest
+    image: lscr.io/linuxserver/mariadb:latest
     restart: always
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
