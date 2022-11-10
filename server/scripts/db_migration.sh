@@ -1,4 +1,4 @@
-#/usr/bin/bash
+#!/bin/bash
 
 # Source the environment variables
 set -a; source ../.env; set +a

@@ -4,7 +4,7 @@ services:
   # MySQL Server
   mysql_database:
     container_name: mysql_database
-    image: arm64v8/mariadb:latest
+    image: mariadb:10.5
     restart: always
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}

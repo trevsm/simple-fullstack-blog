@@ -3,7 +3,7 @@
 set -eo pipefail
 
 function cleanup() {
-   docker-compose down --rmi all
+   docker-compose down
 }
 trap cleanup EXIT
 
