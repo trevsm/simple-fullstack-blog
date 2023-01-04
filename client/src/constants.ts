@@ -5,5 +5,4 @@ export const PATH = {
   LOGIN: "/login",
   REGISTER: "/register",
   FORGOT_PASS: "/forgot-password",
-  CHANGE_PASS: "/change-password",
 }
