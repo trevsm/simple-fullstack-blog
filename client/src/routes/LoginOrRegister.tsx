@@ -105,10 +105,18 @@ export function LoginOrRegister() {
           {isLogin ? "Login" : "Register"}
         </Typography>
         {data?.me && isLogin && (
-          <>
-            <p> Hello, {data.me.email} </p>
-            <p> Use a different account? </p>
-          </>
+          <Box sx={{ px: 2, py: 1 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                span: {
+                  color: "primary.main",
+                },
+              }}
+            >
+              Hello, <span>{data.me.email}</span>. Use a different account?
+            </Typography>
+          </Box>
         )}
         <Box
           maxWidth={500}
