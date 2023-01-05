@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { Link, useLocation, useSearchParams } from "react-router-dom"
 import { PATH } from "../constants"
-import { useErrorResolver } from "../errors/useErrorResolver"
 import {
   useLoginUserMutation,
   useMyInfoQuery,
@@ -12,6 +11,7 @@ import { bind } from "../tools"
 import { Box, Typography, Avatar, TextField, Button, Grid } from "@mui/material"
 import { styled } from "@mui/system"
 import { Page } from "../components/Page"
+import { useSnackbar } from "notistack"
 
 const MuiLink = styled(Link)(({ theme }) => ({
   color: theme.palette.secondary.main,
@@ -19,40 +19,59 @@ const MuiLink = styled(Link)(({ theme }) => ({
 
 export function LoginOrRegister() {
   const { setAuthUser } = useAuthUser()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const [emailError, setEmailError] = useState(false)
+  const [passError, setPassError] = useState(false)
 
   const location = useLocation()
+  const isLogin = location.pathname.includes(PATH.LOGIN)
+  const isRegister = location.pathname.includes(PATH.REGISTER)
 
   const [searchParams] = useSearchParams()
   const redirectUrl = searchParams.get("redirect")
   const redirectFullUrl = redirectUrl ? "/?redirect=" + redirectUrl : ""
 
-  const { data } = useMyInfoQuery({
-    onError: useErrorResolver,
-  })
+  const { data } = useMyInfoQuery()
 
   const onCompleted = (data: any) => {
     const { token } = data.register || data.login
-    if (!token) alert("Something went wrong")
+    if (!token)
+      return enqueueSnackbar("Something went wrong.", { variant: "error" })
 
     setAuthUser(token)
   }
 
   const [register] = useRegisterUserMutation({
-    onError: useErrorResolver,
+    onError: (err) => {
+      enqueueSnackbar(err.message, { variant: "error" })
+      // if message includes "email"
+      // remove password fields
+      if (err.message.includes("email")) {
+        setEmailError(true)
+        setPassword("")
+      }
+      // highlight email field
+    },
     onCompleted,
   })
 
   const [login] = useLoginUserMutation({
-    onError: useErrorResolver,
+    onError: (err) => {
+      enqueueSnackbar(err.message, { variant: "error" })
+      if (err.message.includes("email")) {
+        setEmailError(true)
+        setPassword("")
+      } else if (err.message.includes("password")) {
+        setPassError(true)
+        setPassword("")
+      }
+    },
     onCompleted,
   })
-
-  const isLogin = location.pathname.includes(PATH.LOGIN)
-  const isRegister = location.pathname.includes(PATH.REGISTER)
-
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [password2, setPassword2] = useState("")
 
   const handleSubmit = async () => {
     if (isLogin)
@@ -85,7 +104,7 @@ export function LoginOrRegister() {
         <Typography variant="h4" component="h1" gutterBottom>
           {isLogin ? "Login" : "Register"}
         </Typography>
-        {data?.me && (
+        {data?.me && isLogin && (
           <>
             <p> Hello, {data.me.email} </p>
             <p> Use a different account? </p>
@@ -100,6 +119,7 @@ export function LoginOrRegister() {
           }}
         >
           <TextField
+            error={emailError}
             margin="normal"
             required
             fullWidth
@@ -109,9 +129,15 @@ export function LoginOrRegister() {
             placeholder="email"
             label="Email"
             id="email"
-            {...bind([email, setEmail])}
+            {...bind([email, setEmail], () => {
+              if (emailError) {
+                setEmailError(false)
+                closeSnackbar()
+              }
+            })}
           />
           <TextField
+            error={passError}
             margin="dense"
             required
             fullWidth
@@ -121,22 +147,13 @@ export function LoginOrRegister() {
             placeholder="password"
             id="password"
             autoComplete="current-password"
-            {...bind([password, setPassword])}
+            {...bind([password, setPassword], () => {
+              if (passError) {
+                setPassError(false)
+                closeSnackbar()
+              }
+            })}
           />
-          {isRegister && (
-            <TextField
-              margin="dense"
-              required
-              fullWidth
-              type="password"
-              name="password"
-              label="Password"
-              placeholder="password"
-              id="password"
-              autoComplete="current-password"
-              {...bind([password2, setPassword2])}
-            />
-          )}
           <Button
             type="submit"
             fullWidth

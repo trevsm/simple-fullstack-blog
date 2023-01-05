@@ -1,23 +1,23 @@
 export const Errors = {
   AuthentificationError: () => {
-    throw "You are not authenticated"
+    throw "You are not authenticated."
   },
   UnauthorizedError: () => {
-    throw "You are not authorized to perform this action"
+    throw "You are not authorized to perform this action."
   },
   SufficientPermissions: () => {
-    throw "You do not have sufficient permissions"
+    throw "You do not have sufficient permissions."
   },
-  InvalidCredentials: () => {
-    throw "Invalid Email or Password"
+  IncorrectPassword: () => {
+    throw "Incorrect password."
   },
   UserAlreadyExists: () => {
-    throw "User already exists"
+    throw "This email is already in use. Please try another one."
   },
   UserNotFound: () => {
-    throw "User not found"
+    throw "User with this email does not exist."
   },
   PostNotFound: () => {
-    throw "Post not found"
+    throw "Post not found."
   },
 }

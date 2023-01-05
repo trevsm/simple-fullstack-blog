@@ -11,6 +11,7 @@ import {
 import { setContext } from "@apollo/client/link/context"
 import { CssBaseline, ThemeProvider } from "@mui/material"
 import { theme } from "./theme"
+import { SnackbarProvider } from "notistack"
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",
@@ -38,7 +39,9 @@ root.render(
     <ApolloProvider {...{ client }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
+        <SnackbarProvider maxSnack={3}>
+          <App />
+        </SnackbarProvider>
       </ThemeProvider>
     </ApolloProvider>
   </React.StrictMode>

@@ -61,12 +61,12 @@ export const allUsers = async (_: any, __: any, { user }: any) => {
 export const login = async (_: any, { email, password }: any) => {
   try {
     const user = await db.user.findOne({ where: { email } })
-    if (!user) return Errors.InvalidCredentials()
+    if (!user) return Errors.UserNotFound()
 
     const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
 
     if (hash !== user.getDataValue("password"))
-      return Errors.InvalidCredentials()
+      return Errors.IncorrectPassword()
 
     const token = jsonwebtoken.sign(
       {
