@@ -8,7 +8,16 @@ import {
 } from "../generated/graphql"
 import { useAuthUser } from "../auth/useAuthUser"
 import { bind } from "../tools"
-import { Box, Typography, Avatar, TextField, Button, Grid } from "@mui/material"
+import {
+  Box,
+  Typography,
+  Avatar,
+  TextField,
+  Button,
+  Grid,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material"
 import { styled } from "@mui/system"
 import { Page } from "../components/Page"
 import { useSnackbar } from "notistack"
@@ -91,6 +100,7 @@ export function LoginOrRegister() {
   }
 
   useEffect(() => {
+    // show error message if we can't connect to the server
     if (error)
       enqueueSnackbar(
         "There was an error connecting to the server. Please try again later or contact support for assistance.",
@@ -99,6 +109,14 @@ export function LoginOrRegister() {
         }
       )
   }, [error, enqueueSnackbar])
+
+  useEffect(() => {
+    // clear all fields on route change
+    setEmail("")
+    setPassword("")
+    setEmailError(false)
+    setPassError(false)
+  }, [isLogin, isRegister])
 
   return (
     <Page hideNav>
@@ -112,7 +130,7 @@ export function LoginOrRegister() {
       >
         <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
         <Typography variant="h4" component="h1" gutterBottom>
-          {isLogin ? "Login" : "Register"}
+          {isLogin ? "Login" : "Sign Up"}
         </Typography>
         {data?.me && isLogin && (
           <Box sx={{ px: 2, py: 1 }}>
@@ -136,6 +154,37 @@ export function LoginOrRegister() {
             handleSubmit()
           }}
         >
+          {isRegister && (
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+              }}
+            >
+              <TextField
+                required
+                type="First"
+                name="first"
+                placeholder="First"
+                label="First"
+                id="first"
+                sx={{
+                  width: "50%",
+                }}
+              />
+              <TextField
+                required
+                type="First"
+                name="first"
+                placeholder="First"
+                label="First"
+                id="first"
+                sx={{
+                  width: "50%",
+                }}
+              />
+            </Box>
+          )}
           <TextField
             error={emailError}
             margin="normal"
@@ -172,19 +221,35 @@ export function LoginOrRegister() {
               }
             })}
           />
+          {isRegister && (
+            <Box
+              sx={{
+                pt: 2,
+                pl: 2,
+              }}
+            >
+              <FormControlLabel
+                labelPlacement="end"
+                label="I want to receive inspiration, marketing promotions and updates via email."
+                control={<Checkbox />}
+              />
+            </Box>
+          )}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            {isRegister ? "Register" : isLogin ? "Login" : "Submit"}
+            {isRegister ? "Sign Up" : isLogin ? "Login" : "Submit"}
           </Button>
           <Grid container>
             <Grid item xs>
-              <MuiLink to={PATH.FORGOT_PASS + redirectFullUrl}>
-                Forgot password?
-              </MuiLink>
+              {isLogin && (
+                <MuiLink to={PATH.FORGOT_PASS + redirectFullUrl}>
+                  Forgot password?
+                </MuiLink>
+              )}
             </Grid>
             <Grid item>
               {isLogin ? (
