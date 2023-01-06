@@ -39,7 +39,11 @@ root.render(
     <ApolloProvider {...{ client }}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <SnackbarProvider maxSnack={3}>
+        <SnackbarProvider
+          maxSnack={3}
+          preventDuplicate
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
           <App />
         </SnackbarProvider>
       </ThemeProvider>

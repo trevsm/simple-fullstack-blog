@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useLocation, useSearchParams } from "react-router-dom"
 import { PATH } from "../constants"
 import {
@@ -35,7 +35,7 @@ export function LoginOrRegister() {
   const redirectUrl = searchParams.get("redirect")
   const redirectFullUrl = redirectUrl ? "/?redirect=" + redirectUrl : ""
 
-  const { data } = useMyInfoQuery()
+  const { data, error } = useMyInfoQuery()
 
   const onCompleted = (data: any) => {
     const { token } = data.register || data.login
@@ -89,6 +89,16 @@ export function LoginOrRegister() {
         },
       })
   }
+
+  useEffect(() => {
+    if (error)
+      enqueueSnackbar(
+        "There was an error connecting to the server. Please try again later or contact support for assistance.",
+        {
+          variant: "error",
+        }
+      )
+  }, [error, enqueueSnackbar])
 
   return (
     <Page hideNav>
