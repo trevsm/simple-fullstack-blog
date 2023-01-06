@@ -71,7 +71,7 @@ export const loginUser = async (
     const userData = {
       token,
       user: {
-        user_id: user.user_id,
+        user_id: user.getDataValue("user_id"),
         email: user.getDataValue("email"),
         first_name: user.getDataValue("first_name"),
         last_name: user.getDataValue("last_name"),
@@ -104,8 +104,6 @@ export const registerUser = async (
     // Check if user already exists using email
     const checkUser = await db.User.findOne({ where: { email } })
     if (checkUser) return Errors.UserAlreadyExists()
-
-    console.log(props)
 
     const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
     const user = await db.User.create({

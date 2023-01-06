@@ -233,7 +233,9 @@ export function LoginOrRegister() {
               <FormControlLabel
                 labelPlacement="end"
                 label="I want to receive inspiration, marketing promotions and updates via email."
-                control={<Checkbox />}
+                control={
+                  <Checkbox onChange={(e) => setEmailOptin(e.target.checked)} />
+                }
               />
             </Box>
           )}
