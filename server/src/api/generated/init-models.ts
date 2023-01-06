@@ -1,30 +1,21 @@
 import type { Sequelize } from "sequelize";
-import { post as _post } from "./post";
-import type { postAttributes, postCreationAttributes } from "./post";
-import { user as _user } from "./user";
-import type { userAttributes, userCreationAttributes } from "./user";
+import { User as _User } from "./User";
+import type { UserAttributes, UserCreationAttributes } from "./User";
 
 export {
-  _post as post,
-  _user as user,
+  _User as User,
 };
 
 export type {
-  postAttributes,
-  postCreationAttributes,
-  userAttributes,
-  userCreationAttributes,
+  UserAttributes,
+  UserCreationAttributes,
 };
 
 export function initModels(sequelize: Sequelize) {
-  const post = _post.initModel(sequelize);
-  const user = _user.initModel(sequelize);
+  const User = _User.initModel(sequelize);
 
-  post.belongsTo(user, { as: "user", foreignKey: "user_id"});
-  user.hasMany(post, { as: "posts", foreignKey: "user_id"});
 
   return {
-    post: post,
-    user: user,
+    User: User,
   };
 }

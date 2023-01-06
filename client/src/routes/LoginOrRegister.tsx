@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { Link, useLocation, useSearchParams } from "react-router-dom"
 import { PATH } from "../constants"
 import {
-  useLoginUserMutation,
+  useLoginMutation,
   useMyInfoQuery,
-  useRegisterUserMutation,
+  useRegisterMutation,
 } from "../generated/graphql"
 import { useAuthUser } from "../auth/useAuthUser"
 import { bind } from "../tools"
@@ -27,48 +27,48 @@ const MuiLink = styled(Link)(({ theme }) => ({
 }))
 
 export function LoginOrRegister() {
+  // Auth & snackbar
   const { setAuthUser } = useAuthUser()
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
+  // Form fields
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [first_name, setFirstName] = useState("")
+  const [last_name, setLastName] = useState("")
+  const [email_optin, setEmailOptin] = useState(false)
 
+  // Form errors
   const [emailError, setEmailError] = useState(false)
   const [passError, setPassError] = useState(false)
 
+  // Route info
   const location = useLocation()
   const isLogin = location.pathname.includes(PATH.LOGIN)
   const isRegister = location.pathname.includes(PATH.REGISTER)
 
+  // Redirect url
   const [searchParams] = useSearchParams()
   const redirectUrl = searchParams.get("redirect")
   const redirectFullUrl = redirectUrl ? "/?redirect=" + redirectUrl : ""
 
-  const { data, error } = useMyInfoQuery()
+  const { data } = useMyInfoQuery()
 
-  const onCompleted = (data: any) => {
-    const { token } = data.register || data.login
-    if (!token)
-      return enqueueSnackbar("Something went wrong.", { variant: "error" })
-
-    setAuthUser(token)
-  }
-
-  const [register] = useRegisterUserMutation({
+  const [register] = useRegisterMutation({
     onError: (err) => {
       enqueueSnackbar(err.message, { variant: "error" })
-      // if message includes "email"
-      // remove password fields
       if (err.message.includes("email")) {
         setEmailError(true)
         setPassword("")
       }
-      // highlight email field
     },
-    onCompleted,
+    onCompleted: (res) => {
+      const { token } = res.registerUser
+      setAuthUser(token)
+    },
   })
 
-  const [login] = useLoginUserMutation({
+  const [login] = useLoginMutation({
     onError: (err) => {
       enqueueSnackbar(err.message, { variant: "error" })
       if (err.message.includes("email")) {
@@ -79,7 +79,10 @@ export function LoginOrRegister() {
         setPassword("")
       }
     },
-    onCompleted,
+    onCompleted: (res) => {
+      const { token } = res.loginUser
+      setAuthUser(token)
+    },
   })
 
   const handleSubmit = async () => {
@@ -95,25 +98,22 @@ export function LoginOrRegister() {
         variables: {
           email,
           password,
+          first_name,
+          last_name,
+          email_optin,
         },
       })
   }
 
   useEffect(() => {
-    // show error message if we can't connect to the server
-    if (error)
-      enqueueSnackbar(
-        "There was an error connecting to the server. Please try again later or contact support for assistance.",
-        {
-          variant: "error",
-        }
-      )
-  }, [error, enqueueSnackbar])
-
-  useEffect(() => {
     // clear all fields on route change
     setEmail("")
     setPassword("")
+    setFirstName("")
+    setLastName("")
+    setEmailOptin(false)
+
+    // clear all errors
     setEmailError(false)
     setPassError(false)
   }, [isLogin, isRegister])
@@ -171,17 +171,19 @@ export function LoginOrRegister() {
                 sx={{
                   width: "50%",
                 }}
+                {...bind([first_name, setFirstName])}
               />
               <TextField
                 required
-                type="First"
-                name="first"
-                placeholder="First"
-                label="First"
-                id="first"
+                type="Last"
+                name="last"
+                placeholder="Last"
+                label="Last"
+                id="last"
                 sx={{
                   width: "50%",
                 }}
+                {...bind([last_name, setLastName])}
               />
             </Box>
           )}

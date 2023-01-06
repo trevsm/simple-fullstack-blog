@@ -2,8 +2,12 @@ import { AppBar, Box, Button, Toolbar, Container } from "@mui/material"
 
 import { PATH } from "../constants"
 import { Link } from "react-router-dom"
+import { useMyInfoQuery } from "../generated/graphql"
+import { AvatarMenu } from "./AvatarMenu"
 
 export default function Navbar({ hideNav }: { hideNav?: boolean }) {
+  const { data } = useMyInfoQuery()
+
   return (
     <AppBar
       position="static"
@@ -54,25 +58,29 @@ export default function Navbar({ hideNav }: { hideNav?: boolean }) {
                 <Button color="inherit">About</Button>
               </Link>
               <Link to={PATH.HOME}>
-                <Button color="inherit">Store</Button>
+                <Button color="inherit">Contact</Button>
               </Link>
               <Link to={PATH.HOME}>
-                <Button color="inherit">Contact</Button>
+                <Button color="inherit">Store</Button>
               </Link>
             </Box>
           )}
-          <Box
-            sx={{
-              color: "primary.main",
-            }}
-          >
-            <Link to={PATH.LOGIN}>
-              <Button color="inherit">Login</Button>
-            </Link>
-            <Link to={PATH.REGISTER}>
-              <Button color="inherit">Sign Up</Button>
-            </Link>
-          </Box>
+          {data?.me ? (
+            <AvatarMenu name={data.me.first_name} email={data.me.email} />
+          ) : (
+            <Box
+              sx={{
+                color: "primary.main",
+              }}
+            >
+              <Link to={PATH.LOGIN}>
+                <Button color="inherit">Login</Button>
+              </Link>
+              <Link to={PATH.REGISTER}>
+                <Button color="inherit">Sign Up</Button>
+              </Link>
+            </Box>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

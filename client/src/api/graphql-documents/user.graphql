@@ -1,40 +1,46 @@
-query getUser($id: Int!) {
-  user(id: $id) {
-    id
-    email
-  }
+fragment UserData on User {
+  user_id
+  email
+  first_name
+  last_name
+  email_optin
+  email_verified
+  t_created
+  t_updated
 }
 
 query myInfo {
   me {
-    id
-    email
+    ...UserData
   }
 }
 
-query getAllUsers {
-  allUsers {
-    id
-    email
-  }
-}
-
-mutation loginUser($email: String!, $password: String!) {
-  login(email: $email, password: $password) {
+mutation login($email: String!, $password: String!) {
+  loginUser(email: $email, password: $password) {
     token
     user {
-      id
-      email
+      ...UserData
     }
   }
 }
 
-mutation registerUser($email: String!, $password: String!) {
-  registerUser(email: $email, password: $password) {
+mutation register(
+  $email: String!
+  $password: String!
+  $first_name: String!
+  $last_name: String!
+  $email_optin: Boolean!
+) {
+  registerUser(
+    email: $email
+    password: $password
+    first_name: $first_name
+    last_name: $last_name
+    email_optin: $email_optin
+  ) {
     token
     user {
-      id
-      email
+      ...UserData
     }
   }
 }

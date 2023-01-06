@@ -3,14 +3,14 @@ schema {
   mutation: Mutation
 }
 type User {
-  id: Int!
-  email: String!
-}
-type Post {
-  id: Int!
   user_id: Int!
-  title: String!
-  content: String!
+  email: String!
+  first_name: String!
+  last_name: String!
+  email_optin: Boolean!
+  email_verified: Boolean!
+  t_created: String!
+  t_updated: String!
 }
 type Error {
   error: String!
@@ -21,20 +21,12 @@ type AuthPayload {
 }
 type Query {
   me: User
-  user(id: Int!): User
+  user(user_id: Int!): User
   allUsers: [User!]!
-  post(id: Int!): Post
-  allUserPosts(id: Int!): [Post]
-  allPosts: [Post]
 }
 type Mutation {
-  login(email: String!, password: String!): AuthPayload!
-  registerUser(email: String!, password: String!): AuthPayload!
-  updateUser(id: Int!, email: String, password: String): User
-  deleteUser(id: Int!): String
-  createPost(title: String!, content: String!): Post
-  updatePost(id: Int!, title: String!, content: String!): Post
-  deletePost(id: Int!): String
+  loginUser(email: String!, password: String!): AuthPayload!
+  registerUser(email: String!, password: String!, first_name: String!, last_name: String!, email_optin: Boolean!): AuthPayload!
 }
 "Exposes a URL that specifies the behavior of this scalar."
 directive @specifiedBy(

@@ -12,7 +12,7 @@ export const Page = ({
     <>
       <Navbar hideNav={hideNav} />
       <Container maxWidth="xl">
-        <Box sx={{ my: 4 }}>{children}</Box>
+        <Box sx={{ my: 4, mx: 1 }}>{children}</Box>
       </Container>
     </>
   )

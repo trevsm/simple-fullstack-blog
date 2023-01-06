@@ -11,7 +11,7 @@ export const useAuthUser = () => {
 
   const logout = () => {
     localStorage.clear()
-    window.location.reload()
+    window.location.href = PATH.LOGIN
   }
 
   return { logout, setAuthUser }

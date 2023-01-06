@@ -4,7 +4,7 @@ import { Box, Button, Typography } from "@mui/material"
 import { Page } from "../components/Page"
 
 export function ProtectedRoute({ children }: { children: JSX.Element }) {
-  const { data } = useMyInfoQuery()
+  const { data, loading } = useMyInfoQuery()
   const navigate = useNavigate()
 
   const path = window.location.pathname
@@ -21,17 +21,23 @@ export function ProtectedRoute({ children }: { children: JSX.Element }) {
           alignItems: "center",
         }}
       >
-        <Typography variant="h6" component="h6" gutterBottom>
-          You must be logged-in to access <b>{path}</b>
-        </Typography>
-        <Button
-          variant="contained"
-          onClick={() => {
-            navigate("/login" + "?redirect=" + path)
-          }}
-        >
-          login
-        </Button>
+        {loading ? (
+          "Loading..."
+        ) : (
+          <>
+            <Typography variant="h6" component="h6" gutterBottom>
+              You must be logged-in to access <b>{path}</b>
+            </Typography>
+            <Button
+              variant="contained"
+              onClick={() => {
+                navigate("/login" + "?redirect=" + path)
+              }}
+            >
+              login
+            </Button>
+          </>
+        )}
       </Box>
     </Page>
   )

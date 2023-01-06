@@ -17,7 +17,4 @@ export const Errors = {
   UserNotFound: () => {
     throw "User with this email does not exist."
   },
-  PostNotFound: () => {
-    throw "Post not found."
-  },
 }

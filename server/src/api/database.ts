@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize"
 import * as dotenv from "dotenv"
 dotenv.config()
 
-import { initModels, user, post } from "./generated/init-models"
+import { initModels, User } from "./generated/init-models"
 
 if (
   !process.env.MYSQL_DATABASE ||
@@ -37,8 +37,7 @@ const sequelize = new Sequelize(
 initModels(sequelize)
 
 const db = {
-  user,
-  post,
+  User,
 }
 
 export default db
