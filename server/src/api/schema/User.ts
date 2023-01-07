@@ -6,6 +6,7 @@ import jsonwebtoken from "jsonwebtoken"
 
 import * as dotenv from "dotenv"
 import { User, UserAttributes } from "../generated/User"
+import { sendEmail } from "../../tools/sendEmail"
 dotenv.config()
 
 export const me = async (
@@ -15,10 +16,9 @@ export const me = async (
 ): Promise<Omit<UserAttributes, "password"> | null> => {
   try {
     if (!user) Errors.AuthentificationError()
-    console.log(user)
 
     const me = await db.User.findOne({ where: { user_id: user.user_id } })
-    if (!me) return null
+    if (!me) return Errors.UserNotFound()
 
     return {
       user_id: me?.getDataValue("user_id"),
@@ -119,6 +119,25 @@ export const registerUser = async (
       process.env.JWT_SECRET as string,
       { expiresIn: "2d" }
     )
+
+    // Create a new verification code
+    const vfcode = await db.VerificationCode.create({
+      user_id: user.user_id,
+      code_value: Math.floor(100000 + Math.random() * 900000),
+    })
+
+    const code = vfcode.getDataValue("code_value")
+
+    // send verification email
+    const msg = {
+      to: user.getDataValue("email"),
+      from: " <CompanyName>",
+      subject: "Verify your email",
+      text: `Your verification code is ${code}`,
+      html: `<strong>Your verification code is ${code}</strong>`,
+    }
+
+    const info = await sendEmail(msg)
 
     return {
       user: {

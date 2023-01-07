@@ -1,5 +1,6 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
+import type { VerificationCode, VerificationCodeId } from './VerificationCode';
 
 export interface UserAttributes {
   user_id: number;
@@ -29,6 +30,18 @@ export class User extends Model<UserAttributes, UserCreationAttributes> implemen
   t_created?: Date;
   t_updated?: Date;
 
+  // User hasMany VerificationCode via user_id
+  VerificationCodes!: VerificationCode[];
+  getVerificationCodes!: Sequelize.HasManyGetAssociationsMixin<VerificationCode>;
+  setVerificationCodes!: Sequelize.HasManySetAssociationsMixin<VerificationCode, VerificationCodeId>;
+  addVerificationCode!: Sequelize.HasManyAddAssociationMixin<VerificationCode, VerificationCodeId>;
+  addVerificationCodes!: Sequelize.HasManyAddAssociationsMixin<VerificationCode, VerificationCodeId>;
+  createVerificationCode!: Sequelize.HasManyCreateAssociationMixin<VerificationCode>;
+  removeVerificationCode!: Sequelize.HasManyRemoveAssociationMixin<VerificationCode, VerificationCodeId>;
+  removeVerificationCodes!: Sequelize.HasManyRemoveAssociationsMixin<VerificationCode, VerificationCodeId>;
+  hasVerificationCode!: Sequelize.HasManyHasAssociationMixin<VerificationCode, VerificationCodeId>;
+  hasVerificationCodes!: Sequelize.HasManyHasAssociationsMixin<VerificationCode, VerificationCodeId>;
+  countVerificationCodes!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof User {
     return User.init({

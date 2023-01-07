@@ -44,3 +44,9 @@ mutation register(
     }
   }
 }
+
+mutation verifyEmail($code_value: Int!) {
+  verifyEmail(code_value: $code_value) {
+    ...UserData
+  }
+}

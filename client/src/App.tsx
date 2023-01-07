@@ -5,6 +5,7 @@ import { LoginOrRegister } from "./routes/LoginOrRegister"
 import { Home } from "./routes/Home"
 import { Profile } from "./routes/Profile"
 import { Settings } from "./routes/Settings"
+import { VerifyEmail } from "./routes/VerifyEmail"
 
 export default function App() {
   return (
@@ -27,6 +28,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={PATH.VERIFY_EMAIL}
+          element={
+            <ProtectedRoute>
+              <VerifyEmail />
             </ProtectedRoute>
           }
         />

@@ -62,9 +62,8 @@ export function LoginOrRegister() {
         setPassword("")
       }
     },
-    onCompleted: (res) => {
-      const { token } = res.registerUser
-      setAuthUser(token)
+    onCompleted: ({ registerUser }) => {
+      setAuthUser(registerUser.token, true)
     },
   })
 
@@ -79,9 +78,8 @@ export function LoginOrRegister() {
         setPassword("")
       }
     },
-    onCompleted: (res) => {
-      const { token } = res.loginUser
-      setAuthUser(token)
+    onCompleted: ({ loginUser }) => {
+      setAuthUser(loginUser.token)
     },
   })
 

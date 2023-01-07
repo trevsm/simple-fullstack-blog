@@ -1,5 +1,6 @@
 import { gql } from "apollo-server-express"
 import { me, registerUser, loginUser } from "./User"
+import { verifyEmail } from "./Verification"
 
 export const typeDefs = gql`
   type User {
@@ -11,6 +12,13 @@ export const typeDefs = gql`
     email_verified: Boolean!
     t_created: String!
     t_updated: String!
+  }
+
+  type VerificationCode {
+    code_id: Int!
+    user_id: Int!
+    code_value: Int!
+    t_created: String!
   }
 
   type Error {
@@ -25,8 +33,6 @@ export const typeDefs = gql`
   type Query {
     # User queries
     me: User
-    user(user_id: Int!): User
-    allUsers: [User!]!
   }
 
   type Mutation {
@@ -39,6 +45,9 @@ export const typeDefs = gql`
       last_name: String!
       email_optin: Boolean!
     ): AuthPayload!
+
+    # Verification Code Mutations
+    verifyEmail(code_value: Int!): User!
   }
 `
 export const resolvers = {
@@ -48,5 +57,6 @@ export const resolvers = {
   Mutation: {
     registerUser,
     loginUser,
+    verifyEmail,
   },
 }
