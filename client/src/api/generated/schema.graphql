@@ -12,6 +12,12 @@ type User {
   t_created: String!
   t_updated: String!
 }
+type VerificationCode {
+  code_id: Int!
+  user_id: Int!
+  code_value: Int!
+  t_created: String!
+}
 type Error {
   error: String!
 }
@@ -21,12 +27,12 @@ type AuthPayload {
 }
 type Query {
   me: User
-  user(user_id: Int!): User
-  allUsers: [User!]!
 }
 type Mutation {
   loginUser(email: String!, password: String!): AuthPayload!
   registerUser(email: String!, password: String!, first_name: String!, last_name: String!, email_optin: Boolean!): AuthPayload!
+  updateUser(email: String, password: String, first_name: String, last_name: String, email_optin: Boolean): User!
+  verifyEmail(code_value: Int!): User!
 }
 "Exposes a URL that specifies the behavior of this scalar."
 directive @specifiedBy(

@@ -1,4 +1,8 @@
-import { useMyInfoQuery } from "../generated/graphql"
+import {
+  MyInfoQuery,
+  useMyInfoLazyQuery,
+  useUpdateUserMutation,
+} from "../generated/graphql"
 import { Page } from "../components/Page"
 import {
   Button,
@@ -8,22 +12,87 @@ import {
   Typography,
 } from "@mui/material"
 import { Box } from "@mui/system"
+import { useEffect, useState } from "react"
+import { bind } from "../tools"
+import { useSnackbar } from "notistack"
 
 export const Profile = () => {
-  const { data } = useMyInfoQuery()
+  const { enqueueSnackbar } = useSnackbar()
+  const [data, setData] = useState<MyInfoQuery>()
+  const [getUser, { loading: dataLoading, refetch }] = useMyInfoLazyQuery({
+    onError: (error) => {
+      enqueueSnackbar(error.message, { variant: "error" })
+    },
+    onCompleted: (data) => {
+      setData(data)
+    },
+  })
 
-  if (!data?.me)
-    return (
-      <Page>
-        <p>Unauthorized</p>
-        <p>
-          If you are logged in, you may need to refresh the page to see your
-          profile.
-        </p>
-      </Page>
-    )
+  const [updateUser, { loading: updateLoading }] = useUpdateUserMutation({
+    onError: (error) => {
+      enqueueSnackbar(error.message, { variant: "error" })
+    },
+    onCompleted: (data) => {
+      enqueueSnackbar("Profile updated!", { variant: "success" })
+      refetch()
+    },
+  })
 
-  const { first_name, last_name, email_optin, email_verified } = data.me
+  const loading = dataLoading || updateLoading
+
+  const { first_name, last_name, email, email_optin, email_verified } = data?.me
+    ? data.me
+    : {
+        first_name: "",
+        last_name: "",
+        email: "",
+        email_optin: false,
+        email_verified: false,
+      }
+
+  const firstNameState = useState("")
+  const lastNameState = useState("")
+  const emailState = useState("")
+  const [optin, setOptin] = useState(false)
+
+  const hasChanged: boolean =
+    firstNameState[0] !== first_name ||
+    lastNameState[0] !== last_name ||
+    emailState[0] !== email ||
+    optin !== email_optin
+
+  useEffect(() => {
+    getUser()
+  }, [])
+
+  useEffect(() => {
+    if (data) {
+      firstNameState[1](first_name)
+      lastNameState[1](last_name)
+      emailState[1](email)
+      setOptin(email_optin)
+    }
+  }, [data])
+
+  const handleUpdateUser = () => {
+    // as long as the user has changed something, we'll update the user
+    if (!hasChanged) return
+
+    const fName =
+      firstNameState[0] === first_name ? undefined : firstNameState[0]
+    const lName = lastNameState[0] === last_name ? undefined : lastNameState[0]
+    const eMail = emailState[0] === email ? undefined : emailState[0]
+    const eOptin = optin === email_optin ? undefined : optin
+
+    updateUser({
+      variables: {
+        first_name: fName,
+        last_name: lName,
+        email: eMail,
+        email_optin: eOptin,
+      },
+    })
+  }
 
   return (
     <Page>
@@ -45,11 +114,18 @@ export const Profile = () => {
       >
         <TextField
           label="First"
-          value={first_name}
           margin="dense"
           size="small"
+          required
+          {...bind(firstNameState)}
         />
-        <TextField label="Last" value={last_name} margin="dense" size="small" />
+        <TextField
+          label="Last"
+          margin="dense"
+          size="small"
+          required
+          {...bind(lastNameState)}
+        />
       </Box>
       <Typography
         variant="h6"
@@ -67,9 +143,10 @@ export const Profile = () => {
       >
         <TextField
           label="Email"
-          value={data.me.email}
           margin="dense"
           size="small"
+          required
+          {...bind(emailState)}
         />
         {!email_verified ? (
           <Typography variant="subtitle2" color="warning.main">
@@ -97,10 +174,20 @@ export const Profile = () => {
         <FormControlLabel
           labelPlacement="end"
           label="I want to receive inspiration, marketing promotions and updates via email."
-          control={<Checkbox checked={email_optin} />}
+          control={
+            <Checkbox
+              checked={optin}
+              onChange={(e) => setOptin(e.target.checked)}
+            />
+          }
         />
       </Box>
-      <Button variant="contained" sx={{ mt: 2 }}>
+      <Button
+        variant="contained"
+        sx={{ mt: 2 }}
+        onClick={handleUpdateUser}
+        disabled={loading || !hasChanged}
+      >
         Save
       </Button>
     </Page>

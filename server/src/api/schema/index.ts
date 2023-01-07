@@ -1,5 +1,5 @@
 import { gql } from "apollo-server-express"
-import { me, registerUser, loginUser } from "./User"
+import { me, registerUser, loginUser, updateUser } from "./User"
 import { verifyEmail } from "./Verification"
 
 export const typeDefs = gql`
@@ -45,6 +45,13 @@ export const typeDefs = gql`
       last_name: String!
       email_optin: Boolean!
     ): AuthPayload!
+    updateUser(
+      email: String
+      password: String
+      first_name: String
+      last_name: String
+      email_optin: Boolean
+    ): User!
 
     # Verification Code Mutations
     verifyEmail(code_value: Int!): User!
@@ -57,6 +64,7 @@ export const resolvers = {
   Mutation: {
     registerUser,
     loginUser,
+    updateUser,
     verifyEmail,
   },
 }

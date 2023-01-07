@@ -8,7 +8,7 @@ import { useSearchParams, useNavigate } from "react-router-dom"
 import { PATH } from "../constants"
 
 export const VerifyEmail = () => {
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const navigate = useNavigate()
 
@@ -26,9 +26,9 @@ export const VerifyEmail = () => {
       console.log(err)
     },
     onCompleted: (data) => {
-      console.log(data)
       enqueueSnackbar("Email verified!", { variant: "success" })
       setTimeout(() => {
+        closeSnackbar()
         navigate(redirectFullUrl || PATH.PROFILE)
       }, 1000)
     },
