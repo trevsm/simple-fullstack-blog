@@ -55,6 +55,7 @@ export type MutationUpdateUserArgs = {
   email_optin?: InputMaybe<Scalars['Boolean']>;
   first_name?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
+  newPassword?: InputMaybe<Scalars['String']>;
   password?: InputMaybe<Scalars['String']>;
 };
 
@@ -119,6 +120,7 @@ export type UpdateUserMutationVariables = Exact<{
   first_name?: InputMaybe<Scalars['String']>;
   last_name?: InputMaybe<Scalars['String']>;
   email_optin?: InputMaybe<Scalars['Boolean']>;
+  newPassword?: InputMaybe<Scalars['String']>;
 }>;
 
 
@@ -261,12 +263,13 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const UpdateUserDocument = gql`
-    mutation updateUser($email: String, $first_name: String, $last_name: String, $email_optin: Boolean) {
+    mutation updateUser($email: String, $first_name: String, $last_name: String, $email_optin: Boolean, $newPassword: String) {
   updateUser(
     email: $email
     first_name: $first_name
     last_name: $last_name
     email_optin: $email_optin
+    newPassword: $newPassword
   ) {
     ...UserData
   }
@@ -291,6 +294,7 @@ export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, U
  *      first_name: // value for 'first_name'
  *      last_name: // value for 'last_name'
  *      email_optin: // value for 'email_optin'
+ *      newPassword: // value for 'newPassword'
  *   },
  * });
  */

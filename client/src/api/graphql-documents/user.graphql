@@ -50,12 +50,14 @@ mutation updateUser(
   $first_name: String
   $last_name: String
   $email_optin: Boolean
+  $newPassword: String
 ) {
   updateUser(
     email: $email
     first_name: $first_name
     last_name: $last_name
     email_optin: $email_optin
+    newPassword: $newPassword
   ) {
     ...UserData
   }

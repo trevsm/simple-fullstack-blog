@@ -51,6 +51,7 @@ export const typeDefs = gql`
       first_name: String
       last_name: String
       email_optin: Boolean
+      newPassword: String
     ): User!
 
     # Verification Code Mutations

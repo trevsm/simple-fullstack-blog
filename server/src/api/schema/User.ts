@@ -148,16 +148,16 @@ export const updateUser = async (
   _: any,
   {
     email,
-    password,
     first_name,
     last_name,
     email_optin,
+    newPassword,
   }: {
     email?: string
-    password?: string
     first_name?: string
     last_name?: string
     email_optin?: number
+    newPassword?: string
   },
   { user }: { user: User }
 ): Promise<Omit<UserAttributes, "password">> => {
@@ -194,8 +194,10 @@ export const updateUser = async (
       })
     }
 
-    if (password) {
-      const hash = Crypt.SHA512(password + process.env.PASS_SECRET).toString()
+    if (newPassword) {
+      const hash = Crypt.SHA512(
+        newPassword + process.env.PASS_SECRET
+      ).toString()
       db.User.update({ password: hash }, { where: { user_id: user.user_id } })
     }
 

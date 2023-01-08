@@ -54,7 +54,7 @@ export function LoginOrRegister() {
 
   const { data } = useMyInfoQuery()
 
-  const [register] = useRegisterMutation({
+  const [register, { loading: registerLoading }] = useRegisterMutation({
     onError: (err) => {
       enqueueSnackbar(err.message, { variant: "error" })
       if (err.message.includes("email")) {
@@ -117,7 +117,7 @@ export function LoginOrRegister() {
   }, [isLogin, isRegister])
 
   return (
-    <Page hideNav>
+    <Page hideNav globalLoading={registerLoading}>
       <Box
         sx={{
           marginTop: 8,

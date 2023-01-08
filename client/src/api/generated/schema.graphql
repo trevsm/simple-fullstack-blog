@@ -31,7 +31,7 @@ type Query {
 type Mutation {
   loginUser(email: String!, password: String!): AuthPayload!
   registerUser(email: String!, password: String!, first_name: String!, last_name: String!, email_optin: Boolean!): AuthPayload!
-  updateUser(email: String, password: String, first_name: String, last_name: String, email_optin: Boolean): User!
+  updateUser(email: String, password: String, first_name: String, last_name: String, email_optin: Boolean, newPassword: String): User!
   verifyEmail(code_value: Int!): User!
 }
 "Exposes a URL that specifies the behavior of this scalar."

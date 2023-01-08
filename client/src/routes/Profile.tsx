@@ -8,6 +8,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material"
@@ -15,6 +16,8 @@ import { Box } from "@mui/system"
 import { useEffect, useState } from "react"
 import { bind } from "../tools"
 import { useSnackbar } from "notistack"
+import { green, orange } from "@mui/material/colors"
+import { Visibility, VisibilityOff } from "@mui/icons-material"
 
 export const Profile = () => {
   const { enqueueSnackbar } = useSnackbar()
@@ -28,8 +31,22 @@ export const Profile = () => {
     },
   })
 
+  const firstNameState = useState("")
+  const lastNameState = useState("")
+  const emailState = useState("")
+  const [optin, setOptin] = useState(false)
+
+  const [password, setPassword] = useState("")
+  const [visiblePassword, setVisiblePassword] = useState(false)
+
   const [updateUser, { loading: updateLoading }] = useUpdateUserMutation({
     onError: (error) => {
+      // reset all fields
+      firstNameState[1](data?.me?.first_name || "")
+      lastNameState[1](data?.me?.last_name || "")
+      emailState[1](data?.me?.email || "")
+      setOptin(data?.me?.email_optin || false)
+
       enqueueSnackbar(error.message, { variant: "error" })
     },
     onCompleted: (data) => {
@@ -40,49 +57,40 @@ export const Profile = () => {
 
   const loading = dataLoading || updateLoading
 
-  const { first_name, last_name, email, email_optin, email_verified } = data?.me
-    ? data.me
-    : {
-        first_name: "",
-        last_name: "",
-        email: "",
-        email_optin: false,
-        email_verified: false,
-      }
-
-  const firstNameState = useState("")
-  const lastNameState = useState("")
-  const emailState = useState("")
-  const [optin, setOptin] = useState(false)
-
   const hasChanged: boolean =
-    firstNameState[0] !== first_name ||
-    lastNameState[0] !== last_name ||
-    emailState[0] !== email ||
-    optin !== email_optin
+    firstNameState[0] !== data?.me?.first_name ||
+    lastNameState[0] !== data?.me?.last_name ||
+    emailState[0] !== data?.me?.email ||
+    optin !== data?.me?.email_optin ||
+    password !== ""
 
   useEffect(() => {
     getUser()
   }, [])
 
   useEffect(() => {
-    if (data) {
+    if (data?.me) {
+      const { first_name, last_name, email, email_optin } = data.me
       firstNameState[1](first_name)
       lastNameState[1](last_name)
       emailState[1](email)
       setOptin(email_optin)
+      setPassword("")
     }
   }, [data])
 
   const handleUpdateUser = () => {
     // as long as the user has changed something, we'll update the user
-    if (!hasChanged) return
+    if (!hasChanged || !data?.me) return
+
+    const { first_name, last_name, email, email_optin } = data.me
 
     const fName =
       firstNameState[0] === first_name ? undefined : firstNameState[0]
     const lName = lastNameState[0] === last_name ? undefined : lastNameState[0]
     const eMail = emailState[0] === email ? undefined : emailState[0]
     const eOptin = optin === email_optin ? undefined : optin
+    const pWord = password === "" ? undefined : password
 
     updateUser({
       variables: {
@@ -90,6 +98,7 @@ export const Profile = () => {
         last_name: lName,
         email: eMail,
         email_optin: eOptin,
+        newPassword: pWord,
       },
     })
   }
@@ -148,15 +157,59 @@ export const Profile = () => {
           required
           {...bind(emailState)}
         />
-        {!email_verified ? (
-          <Typography variant="subtitle2" color="warning.main">
-            Unverified
-          </Typography>
-        ) : (
-          <Typography variant="subtitle2" color="success.main">
-            Verified
-          </Typography>
-        )}
+        <Typography
+          variant="subtitle2"
+          sx={{
+            width: "fit-content",
+            marginTop: "5px",
+          }}
+        >
+          <Box
+            sx={{
+              display: data?.me ? "inline-block" : "none",
+              padding: "2px 5px 0 5px",
+              borderRadius: "5px",
+              backgroundColor: data?.me?.email_verified
+                ? green[500]
+                : orange[500],
+              border: "1px solid",
+              borderColor: data?.me?.email_verified ? green[700] : orange[700],
+            }}
+            color="white"
+          >
+            {/* @TODO: add a tool tip about what it means to be unverified */}
+            {data?.me
+              ? data.me.email_verified
+                ? "Verified"
+                : "Unverified"
+              : ""}
+          </Box>
+          {/* @TODO: Add "Verify Email" button */}
+        </Typography>
+      </Box>
+
+      <Typography
+        variant="h6"
+        component="h2"
+        sx={{ my: 2, textDecoration: "underline" }}
+      >
+        Password
+      </Typography>
+      <Box sx={{ display: "flex", gap: 1 }}>
+        <TextField
+          label="New Password"
+          margin="dense"
+          size="small"
+          type={visiblePassword ? "text" : "password"}
+          required
+          {...bind([password, setPassword])}
+        />
+        <IconButton
+          onClick={() => setVisiblePassword(!visiblePassword)}
+          sx={{ alignSelf: "flex-end" }}
+        >
+          {visiblePassword ? <VisibilityOff /> : <Visibility />}
+        </IconButton>
       </Box>
 
       <Typography
